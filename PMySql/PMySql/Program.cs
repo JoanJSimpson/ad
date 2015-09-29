@@ -13,7 +13,7 @@ namespace PMySql
 			);
 			mySqlConnection.Open ();
 
-			//updateDatabase (mySqlConnection);
+			updateDatabase (mySqlConnection);
 
 			MySqlCommand mySqlCommand = mySqlConnection.CreateCommand ();
 			//mySqlCommand.CommandText = "select * from articulo a join categoria c on a.categoria = c.id";
@@ -38,7 +38,9 @@ namespace PMySql
 
 		private static void updateDatabase(MySqlConnection mySqlConnection) {
 			MySqlCommand mySqlCommand = mySqlConnection.CreateCommand ();
-			mySqlCommand.CommandText = "update articulo set categoria=null where id=5";
+			//mySqlCommand.CommandText = "update articulo set categoria=null where id=5";
+			//mySqlCommand.CommandText = "delete from categoria where id=2";
+			mySqlCommand.CommandText = "insert into articulo (nombre, categoria) values ('artículo nuevo', 1)";
 			mySqlCommand.ExecuteNonQuery ();
 		}
 
