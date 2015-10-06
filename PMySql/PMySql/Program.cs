@@ -12,7 +12,7 @@ namespace PMySql
 				"Database=dbprueba;Data Source=localhost;User Id=root;Password=sistemas"
 			);
 			mySqlConnection.Open ();
-
+			//actualiza la base de datos
 			updateDatabase (mySqlConnection);
 
 			MySqlCommand mySqlCommand = mySqlConnection.CreateCommand ();
