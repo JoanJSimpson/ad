@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PArticulo(Joan)", "PArticulo\PArticulo(Joan).csproj", "{20B86C8D-4C57-4F4E-8EFE-D707C2D547CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PArticulo", "PArticulo\PArticulo.csproj", "{20B86C8D-4C57-4F4E-8EFE-D707C2D547CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +15,6 @@ Global
 		{20B86C8D-4C57-4F4E-8EFE-D707C2D547CB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = PArticulo\PArticulo(Joan).csproj
+		StartupItem = PArticulo\PArticulo.csproj
 	EndGlobalSection
 EndGlobal
