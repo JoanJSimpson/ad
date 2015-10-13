@@ -13,15 +13,19 @@ public partial class MainWindow: Gtk.Window
 		Build ();
 
 		Console.WriteLine ("MainWindow ctor.");
-		IDbConnection dbConnection = App.Instance.DbConnection;
-		IDbCommand dbCommand = dbConnection.CreateCommand ();
-		dbCommand.CommandText = "select * from articulo";
+		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
 
-		IDataReader dataReader = dbCommand.ExecuteReader ();
+
+		//IDbConnection dbConnection = App.Instance.DbConnection;
+		//IDbCommand dbCommand = dbConnection.CreateCommand ();
+		//dbCommand.CommandText = "select * from articulo";
+
+		//IDataReader dataReader = dbCommand.ExecuteReader ();
 //		treeView.AppendColumn ("id", new CellRendererText (), "text", 0);
 //		treeView.AppendColumn ("nombre", new CellRendererText (), "text", 1);
-		string[] columnNames = getColumnNames (dataReader);
+		string[] columnNames = queryResult.ColumnNames;
 		CellRendererText cellRendererText = new CellRendererText();
+		treeView.AppendColumn(
 		for (int index = 0; index < columnNames.Length; index++) {
 			int column = index;
 			treeView.AppendColumn (columnNames [index], cellRendererText, 
@@ -46,20 +50,20 @@ public partial class MainWindow: Gtk.Window
 			listStore.AppendValues (values);
 		}
 
-		dataReader.Close ();
+		//dataReader.Close ();
 
 		treeView.Model = listStore;
 
-		dbConnection.Close ();
+		//dbConnection.Close ();
 	}
 
-	private string[] getColumnNames(IDataReader dataReader) {
-		List<string> columnNames = new List<string> ();
-		int count = dataReader.FieldCount;
-		for (int index = 0; index < count; index++)
-			columnNames.Add (dataReader.GetName (index));
-		return columnNames.ToArray ();
-	}
+//	private string[] getColumnNames(IDataReader dataReader) {
+//		List<string> columnNames = new List<string> ();
+//		int count = dataReader.FieldCount;
+//		for (int index = 0; index < count; index++)
+//			columnNames.Add (dataReader.GetName (index));
+//		return columnNames.ToArray ();
+//	}
 
 	private Type[] getTypes(int count) {
 		List<Type> types = new List<Type> ();
@@ -68,13 +72,13 @@ public partial class MainWindow: Gtk.Window
 		return types.ToArray ();
 	}
 
-	private IList getValues(IDataReader dataReader) {
-		List<object> values = new List<object> ();
-		int count = dataReader.FieldCount;
-		for (int index = 0; index < count; index++)
-			values.Add (dataReader [index]);
-		return values;
-	}
+//	private IList getValues(IDataReader dataReader) {
+//		List<object> values = new List<object> ();
+//		int count = dataReader.FieldCount;
+//		for (int index = 0; index < count; index++)
+//			values.Add (dataReader [index]);
+//		return values;
+//	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
