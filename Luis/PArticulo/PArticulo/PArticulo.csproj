@@ -76,6 +76,7 @@
     <Compile Include="App.cs" />
     <Compile Include="QueryResult.cs" />
     <Compile Include="PersisterHelper.cs" />
+    <Compile Include="TreeViewHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

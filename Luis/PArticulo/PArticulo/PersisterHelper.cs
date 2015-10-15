@@ -12,7 +12,7 @@ namespace PArticulo
 			IDbConnection dbConnection = App.Instance.DbConnection;
 			IDbCommand dbCommand = dbConnection.CreateCommand ();
 			dbCommand.CommandText = selectText;
-			//ToDO completar
+
 			IDataReader dataReader = dbCommand.ExecuteReader ();
 			QueryResult queryResult = new QueryResult ();			
 			queryResult.ColumnNames = getColumnNames (dataReader);
@@ -24,7 +24,6 @@ namespace PArticulo
 			queryResult.Rows=rows;
 
 			dataReader.Close ();
-			//dbConnection.Close ();
 			return queryResult;
 
 		
