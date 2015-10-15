@@ -15,17 +15,9 @@ public partial class MainWindow: Gtk.Window
 		Console.WriteLine ("MainWindow ctor.");
 		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
 
-
-		//IDbConnection dbConnection = App.Instance.DbConnection;
-		//IDbCommand dbCommand = dbConnection.CreateCommand ();
-		//dbCommand.CommandText = "select * from articulo";
-
-		//IDataReader dataReader = dbCommand.ExecuteReader ();
-//		treeView.AppendColumn ("id", new CellRendererText (), "text", 0);
-//		treeView.AppendColumn ("nombre", new CellRendererText (), "text", 1);
 		string[] columnNames = queryResult.ColumnNames;
 		CellRendererText cellRendererText = new CellRendererText();
-		treeView.AppendColumn(
+
 		for (int index = 0; index < columnNames.Length; index++) {
 			int column = index;
 			treeView.AppendColumn (columnNames [index], cellRendererText, 
@@ -43,27 +35,16 @@ public partial class MainWindow: Gtk.Window
 		//ListStore listStore = new ListStore (typeof(String), typeof(String));
 		//Type[] types = getTypes (dataReader.FieldCount);
 		ListStore listStore = new ListStore (typeof(IList));
+		foreach (IList row in queryResult.Rows) {
+			listStore.AppendValues (row);
 
-		while (dataReader.Read()) {
-			//listStore.AppendValues (dataReader [0].ToString(), dataReader [1].ToString());
-			IList values = getValues (dataReader);
-			listStore.AppendValues (values);
 		}
-
-		//dataReader.Close ();
 
 		treeView.Model = listStore;
 
-		//dbConnection.Close ();
 	}
 
-//	private string[] getColumnNames(IDataReader dataReader) {
-//		List<string> columnNames = new List<string> ();
-//		int count = dataReader.FieldCount;
-//		for (int index = 0; index < count; index++)
-//			columnNames.Add (dataReader.GetName (index));
-//		return columnNames.ToArray ();
-//	}
+
 
 	private Type[] getTypes(int count) {
 		List<Type> types = new List<Type> ();
@@ -72,13 +53,6 @@ public partial class MainWindow: Gtk.Window
 		return types.ToArray ();
 	}
 
-//	private IList getValues(IDataReader dataReader) {
-//		List<object> values = new List<object> ();
-//		int count = dataReader.FieldCount;
-//		for (int index = 0; index < count; index++)
-//			values.Add (dataReader [index]);
-//		return values;
-//	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{

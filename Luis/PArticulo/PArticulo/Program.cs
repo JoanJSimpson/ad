@@ -11,6 +11,7 @@ namespace PArticulo
 			MainWindow win = new MainWindow ();
 			win.Show ();
 			Application.Run ();
+			App.Instance.DbConnection.Close ();
 		}
 	}
 }

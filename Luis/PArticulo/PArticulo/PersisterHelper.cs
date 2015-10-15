@@ -19,13 +19,12 @@ namespace PArticulo
 			List<IList> rows = new List<IList> ();
 
 			while (dataReader.Read()) {
-				//listStore.AppendValues (dataReader [0].ToString(), dataReader [1].ToString());
-				rows.Add (getRows.dataReader());
+				rows.Add (getRows (dataReader));
 			}
 			queryResult.Rows=rows;
 
 			dataReader.Close ();
-			dbConnection.Close ();
+			//dbConnection.Close ();
 			return queryResult;
 
 		
