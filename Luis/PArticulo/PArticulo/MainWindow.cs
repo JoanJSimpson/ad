@@ -1,6 +1,7 @@
 using System;
 using Gtk;
 using SerpisAd;
+using PArticulo;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -31,4 +32,11 @@ public partial class MainWindow: Gtk.Window
 		Application.Quit ();
 		a.RetVal = true;
 	}
+	protected void OnNewActionActivated (object sender, EventArgs e)
+	{
+		new ArticuloView ();
+	}
+
+
+
 }
