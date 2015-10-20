@@ -3,10 +3,14 @@
 public partial class MainWindow
 {
 	private global::Gtk.UIManager UIManager;
+	private global::Gtk.Action Action;
 	private global::Gtk.VBox vbox1;
 	private global::Gtk.Toolbar toolbar1;
 	private global::Gtk.ScrolledWindow GtkScrolledWindow;
 	private global::Gtk.TreeView treeView;
+	private global::Gtk.VBox vbox2;
+	private global::Gtk.Label label1;
+	private global::Gtk.Entry sentencia;
 
 	protected virtual void Build ()
 	{
@@ -14,6 +18,8 @@ public partial class MainWindow
 		// Widget MainWindow
 		this.UIManager = new global::Gtk.UIManager ();
 		global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
+		this.Action = new global::Gtk.Action ("Action", null, null, null);
+		w1.Add (this.Action, null);
 		this.UIManager.InsertActionGroup (w1, 0);
 		this.AddAccelGroup (this.UIManager.AccelGroup);
 		this.Name = "MainWindow";
@@ -24,7 +30,7 @@ public partial class MainWindow
 		this.vbox1.Name = "vbox1";
 		this.vbox1.Spacing = 6;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.UIManager.AddUiFromString ("<ui><toolbar name='toolbar1'><toolitem/></toolbar></ui>");
+		this.UIManager.AddUiFromString ("<ui><toolbar name='toolbar1'><toolitem/><toolitem name='Action' action='Action'/></toolbar></ui>");
 		this.toolbar1 = ((global::Gtk.Toolbar)(this.UIManager.GetWidget ("/toolbar1")));
 		this.toolbar1.Name = "toolbar1";
 		this.toolbar1.ShowArrow = false;
@@ -45,6 +51,33 @@ public partial class MainWindow
 		this.vbox1.Add (this.GtkScrolledWindow);
 		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.GtkScrolledWindow]));
 		w4.Position = 1;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.vbox2 = new global::Gtk.VBox ();
+		this.vbox2.Name = "vbox2";
+		this.vbox2.Spacing = 6;
+		// Container child vbox2.Gtk.Box+BoxChild
+		this.label1 = new global::Gtk.Label ();
+		this.label1.Name = "label1";
+		this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Inserta la sentencia");
+		this.vbox2.Add (this.label1);
+		global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.label1]));
+		w5.Position = 0;
+		w5.Expand = false;
+		w5.Fill = false;
+		// Container child vbox2.Gtk.Box+BoxChild
+		this.sentencia = new global::Gtk.Entry ();
+		this.sentencia.CanFocus = true;
+		this.sentencia.Name = "sentencia";
+		this.sentencia.IsEditable = true;
+		this.sentencia.InvisibleChar = '•';
+		this.vbox2.Add (this.sentencia);
+		global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.sentencia]));
+		w6.Position = 1;
+		w6.Expand = false;
+		w6.Fill = false;
+		this.vbox1.Add (this.vbox2);
+		global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.vbox2]));
+		w7.Position = 2;
 		this.Add (this.vbox1);
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
