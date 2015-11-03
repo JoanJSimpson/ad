@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{20B86C8D-4C57-4F4E-8EFE-D707C2D547CB}</ProjectGuid>
+    <ProjectGuid>{93E213CB-CB16-4453-B61B-863BDC8334DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>PArticulo</RootNamespace>
     <AssemblyName>PArticulo</AssemblyName>
@@ -58,9 +58,12 @@
     </Reference>
     <Reference Include="Mono.Posix" />
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\..\..\..\usr\lib\cli\MySql.Data-6.4\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\..\..\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="PSerpisAd">
+      <HintPath>..\..\PSerpisAd\PSerpisAd\bin\Debug\PSerpisAd.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -73,6 +76,9 @@
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ArticuloView.cs" />
+    <Compile Include="gtk-gui\PArticulo.ArticuloView.cs" />
+    <Compile Include="ComboBoxHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
