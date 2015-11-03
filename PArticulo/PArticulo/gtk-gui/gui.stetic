@@ -69,8 +69,14 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Window" id="PArticulo.ArticuloView" design-size="400 145">
-    <action-group name="Default" />
+  <widget class="Gtk.Window" id="PArticulo.ArticuloView" design-size="400 157">
+    <action-group name="Default">
+      <action id="saveAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-save</property>
+      </action>
+    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">ArticuloView</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -82,7 +88,9 @@
           <widget class="Gtk.Toolbar" id="toolbar1">
             <property name="MemberName" />
             <property name="ShowArrow">False</property>
-            <node name="__gtksharp_76_Stetic_Editor_ActionToolbar" type="Toolbar" />
+            <node name="__gtksharp_76_Stetic_Editor_ActionToolbar" type="Toolbar">
+              <node type="Toolitem" action="saveAction" />
+            </node>
           </widget>
           <packing>
             <property name="Position">0</property>
