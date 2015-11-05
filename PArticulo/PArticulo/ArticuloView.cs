@@ -44,23 +44,24 @@ namespace PArticulo
 
 
 			string nombre = entryNombre.Text;
-			object categoria = GetId(comboBoxCategoria);
+			object categoria = ComboBoxHelper.GetId(comboBoxCategoria);
 			decimal precio = Convert.ToDecimal(spinButtonPrecio.Value);
 
-			addParameter (dbCommand, "nombre", nombre);
+
+			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
 //			IDbDataParameter dbDataParameterNombre = dbCommand.CreateParameter ();
 //			dbDataParameterNombre.ParameterName = "nombre";
 //			dbDataParameterNombre.Value = nombre;
 //			dbCommand.Parameters.Add (dbDataParameterNombre);
 
 
-			addParameter (dbCommand, "categoria", categoria);
+			DbCommandHelper.AddParameter (dbCommand, "categoria", categoria);
 //			IDbDataParameter dbDataParameterCategoria = dbCommand.CreateParameter ();
 //			dbDataParameterCategoria.ParameterName = "categoria";
 //			dbDataParameterCategoria.Value = categoria;
 //			dbCommand.Parameters.Add (dbDataParameterCategoria);
 
-			addParameter (dbCommand, "precio", precio);
+			DbCommandHelper.AddParameter (dbCommand, "precio", precio);
 //			IDbDataParameter dbDataParameterPrecio = dbCommand.CreateParameter ();
 //			dbDataParameterPrecio.ParameterName = "precio";
 //			dbDataParameterPrecio.Value = precio;
@@ -69,20 +70,9 @@ namespace PArticulo
 			dbCommand.ExecuteNonQuery();
 		}
 
-		private static void addParameter(IDbCommand dbCommand, string name, object value){
-			IDbDataParameter dbDataParameter = dbCommand.CreateParameter ();
-			dbDataParameter.ParameterName = name;
-			dbDataParameter.Value = value;
-			dbCommand.Parameters.Add (dbDataParameter);
 
-		}
 
-		public static object GetId (ComboBox comboBox){
-			TreeIter treeIter;
-			comboBox.GetActiveIter (out treeIter);
-			IList row = (IList)comboBox.Model.GetValue (treeIter,0);
-			return row [0];
-		}
+
 	}
 }
 

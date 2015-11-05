@@ -30,4 +30,10 @@ public partial class MainWindow: Gtk.Window
 		a.RetVal = true;
 	}
 
+	protected void OnRefreshActionActivated (object sender, EventArgs e)
+	{
+		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
+
+		TreeViewHelper.Fill (treeView, queryResult);
+	}
 }

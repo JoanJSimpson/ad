@@ -15,6 +15,7 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes" />
         <property name="StockId">gtk-refresh</property>
+        <signal name="Activated" handler="OnRefreshActionActivated" />
       </action>
       <action id="newAction">
         <property name="Type">Action</property>
