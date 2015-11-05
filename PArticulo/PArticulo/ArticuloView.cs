@@ -19,8 +19,6 @@ namespace PArticulo
 			saveAction.Activated += delegate {
 				save();
 			};
-
-
 //			CellRendererText cellRendererText = new CellRendererText ();
 //			comboBoxCategoria.PackStart (cellRendererText, false);
 //			comboBoxCategoria.SetCellDataFunc (cellRendererText, 
@@ -35,25 +33,22 @@ namespace PArticulo
 
 			//comboBoxCategoria.
 			//spinButtonPrecio.Value = 1.5;
-
 		}
+
 		private void save(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
 			dbCommand.CommandText = "insert into articulo (nombre, categoria, precio) " +
 				"values (@nombre, @categoria, @precio)";
 
-
 			string nombre = entryNombre.Text;
 			object categoria = ComboBoxHelper.GetId(comboBoxCategoria);
 			decimal precio = Convert.ToDecimal(spinButtonPrecio.Value);
-
 
 			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
 //			IDbDataParameter dbDataParameterNombre = dbCommand.CreateParameter ();
 //			dbDataParameterNombre.ParameterName = "nombre";
 //			dbDataParameterNombre.Value = nombre;
 //			dbCommand.Parameters.Add (dbDataParameterNombre);
-
 
 			DbCommandHelper.AddParameter (dbCommand, "categoria", categoria);
 //			IDbDataParameter dbDataParameterCategoria = dbCommand.CreateParameter ();
