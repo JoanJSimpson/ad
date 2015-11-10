@@ -8,19 +8,32 @@ public partial class MainWindow: Gtk.Window
 	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
-		QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
+		QueryResult queryResult = PersisterHelper.Get ("select * from categoria order by id");
 		TreeViewHelper.Fill (treeView, queryResult);
 
 		newAction.Activated += delegate {
 			new CategoriaView();
 		};
+		//boton borrar
+		borrarCategoria.Activated += delegate {
+			new CategoriaView ();
+		};
 
 
 	}
 
+
+
 	//boton actualizar
 	protected void OnRefreshActionActivated (object sender, EventArgs e)
 	{
+
+		TreeViewColumn[] columnas = treeView.Columns;
+		for (int i=0; i<columnas.Length; i++) {
+			treeView.RemoveColumn(columnas[i]);
+
+		
+		}
 		QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
 
 		TreeViewHelper.Fill (treeView, queryResult);

@@ -15,6 +15,7 @@ namespace PCategoria
 	
 			saveAction.Activated += delegate {
 				save();
+				Destroy();
 			};
 
 		}
