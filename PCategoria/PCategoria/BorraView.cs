@@ -21,15 +21,33 @@ namespace PCategoria
 
 		private void borrarCategoria(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
-			dbCommand.CommandText = "delete from categoria " +
-				"where values (@selec) = '(@total)'";
-			string algo";
+			//dbCommand.CommandText = "delete from categoria " +
+				//"where {0} = @param";
 
+			string deleteSql = "delete from categoria " +
+				"where {0} = (param)"+" values(@param)";
+			string fieldName="";
+
+			string param="";
 			string nombre = entryNombre.Text;
-			int id = int.Parse(entryId.Text);
+			String id = entryId.Text;
+			if (!nombre.Equals ("")) {
+				fieldName = "nombre";
+				Console.WriteLine ("Entra en nombre");
+				param = nombre;
+			} else if (!id.Equals("")) {
+				fieldName = "id";
+				Console.WriteLine ("Entra en id");
+				param = id;
+			} else {
+				//que salga una ventana diciendo que seleecione algo
+			}
 
-			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
-			DbCommandHelper.AddParameter (dbCommand, "id", id);
+			string inyectar = string.Format (deleteSql, fieldName);
+			dbCommand.CommandText = inyectar;
+			Console.WriteLine (inyectar+": Param: "+param);
+
+			DbCommandHelper.AddParameter (dbCommand, "param", param);
 
 			dbCommand.ExecuteNonQuery();
 		}
