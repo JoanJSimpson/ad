@@ -16,7 +16,7 @@ public partial class MainWindow: Gtk.Window
 		};
 		//boton borrar
 		borrarCategoria.Activated += delegate {
-			new CategoriaView ();
+			new BorraView ();
 		};
 
 
