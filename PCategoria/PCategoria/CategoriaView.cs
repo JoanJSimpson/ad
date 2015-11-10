@@ -21,13 +21,12 @@ namespace PCategoria
 
 		private void save(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
-			dbCommand.CommandText = "insert into categoria (categoria) " +
-				"values (@categoria)";
+			dbCommand.CommandText = "insert into categoria (nombre) " +
+				"values (@nombre)";
 
-			string categoria = entryNombre.Text;
+			string nombre = entryNombre.Text;
 
-			DbCommandHelper.AddParameter (dbCommand, "categoria", categoria);
-
+			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
 
 			dbCommand.ExecuteNonQuery();
 		}

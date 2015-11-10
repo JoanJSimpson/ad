@@ -40,7 +40,7 @@ namespace PCategoria
 			w2.Expand = false;
 			w2.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.table1 = new global::Gtk.Table (((uint)(3)), ((uint)(3)), false);
+			this.table1 = new global::Gtk.Table (((uint)(1)), ((uint)(2)), false);
 			this.table1.Name = "table1";
 			this.table1.RowSpacing = ((uint)(6));
 			this.table1.ColumnSpacing = ((uint)(6));
@@ -66,6 +66,8 @@ namespace PCategoria
 			this.vbox2.Add (this.table1);
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.table1]));
 			w5.Position = 1;
+			w5.Expand = false;
+			w5.Fill = false;
 			this.Add (this.vbox2);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
