@@ -30,9 +30,17 @@ public partial class MainWindow: Gtk.Window
 		a.RetVal = true;
 	}
 
+	//boton actualizar
 	protected void OnRefreshActionActivated (object sender, EventArgs e)
 	{
-		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
+
+		TreeViewColumn[] columnas = treeView.Columns;
+		for (int i=0; i<columnas.Length; i++) {
+			treeView.RemoveColumn(columnas[i]);
+
+
+		}
+		QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
 
 		TreeViewHelper.Fill (treeView, queryResult);
 	}
