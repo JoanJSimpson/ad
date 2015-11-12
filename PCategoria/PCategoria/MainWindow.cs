@@ -28,6 +28,7 @@ public partial class MainWindow: Gtk.Window
 			Console.WriteLine("Ha ocurrido treeview.Selection.Changed");
 			borrarCategoria.Sensitive = TreeViewHelper.IsSelected(treeView);
 		};
+		borrarCategoria.Sensitive = false;
 		//{
 		//newAction.Activated += newActionActivated;
 	}

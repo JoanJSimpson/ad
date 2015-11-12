@@ -33,6 +33,7 @@ public partial class MainWindow: Gtk.Window
 		};
 		//{
 		//newAction.Activated += newActionActivated;
+		deleteAction.Sensitive = false;
 	}
 
 	private void delete(object id){
