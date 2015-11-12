@@ -4,6 +4,7 @@ using Gtk;
 using SerpisAd;
 using PArticulo;
 using System.Collections;
+using System.Data;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -35,13 +36,22 @@ public partial class MainWindow: Gtk.Window
 	}
 
 	private void delete(object id){
+		if (WindowsHelper.ConfirmDelete (this)) {
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
+			dbCommand.CommandText = "delete from articulo where id = " +
+				id;
+			dbCommand.ExecuteNonQuery ();
+		}
+	}
+	/*private void delete(object id){
 		if (WindowsHelper.ConfirmDelete(this)) {
+
 			Console.WriteLine ("Dice que eliminar si");
 		} else {
 			Console.WriteLine ("Dice que eliminar no");
 		}
 
-	}
+	}*/
 
 
 
