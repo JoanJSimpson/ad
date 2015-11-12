@@ -10,6 +10,7 @@ public partial class MainWindow: Gtk.Window
 	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
+		Title = "Artículo";
 		Console.WriteLine ("MainWindow ctor.");
 		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
 		TreeViewHelper.Fill (treeView, queryResult);
@@ -19,31 +20,52 @@ public partial class MainWindow: Gtk.Window
 		};
 
 		deleteAction.Activated += delegate {
-			object id = GetId(treeView);
+			object id = TreeViewHelper.GetId(treeView);
 			Console.WriteLine ("click en deleteAction id={0}", id);
+			delete(id);
 
 		};
 
 		treeView.Selection.Changed += delegate {
-			Console.WriteLine("Ha ocurrido treeview.selection.changed");
-			deleteAction.Sensitive = GetId(treeView) !=null;
+			Console.WriteLine("Ha ocurrido treeview.Selection.Changed");
+			deleteAction.Sensitive = TreeViewHelper.IsSelected(treeView);
 		};
 		//{
 		//newAction.Activated += newActionActivated;
 	}
 
-	public object GetId(TreeView treeview){
-		TreeIter treeIter;
-		if (!treeView.Selection.GetSelected (out treeIter))
-			return null;
-		IList row = (IList)treeView.Model.GetValue (treeIter, 0);
-		return row [0];
+	private void delete(object id){
+		if (ConfirmDelete(this)) {
+			Console.WriteLine ("Dice que eliminar si");
+		} else {
+			Console.WriteLine ("Dice que eliminar no");
+		}
+
 	}
+
+	public static bool ConfirmDelete(Window window){
+		MessageDialog messageDialog = new MessageDialog (
+			window, 
+			DialogFlags.DestroyWithParent, 
+			MessageType.Question,
+			ButtonsType.YesNo,
+			"¿Quieres eliminar el elemento seleccionado?"
+			);
+		messageDialog.Title = window.Title;
+		ResponseType response = (ResponseType)messageDialog.Run ();
+		messageDialog.Destroy();
+		//Devuelve true si pulsa Yes, false si no pulsa Yes
+		return response == ResponseType.Yes;
+
+	}
+
 
 //	void newActionActivated (object sender, EventArgs e)
 //	{
 //		new ArticuloView ();
 //	}
+	//Metodo para ver si hay seleccionados
+
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
