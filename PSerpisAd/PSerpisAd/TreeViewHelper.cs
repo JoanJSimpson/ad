@@ -8,7 +8,7 @@ namespace SerpisAd
 	{
 		public static void Fill (TreeView treeView, QueryResult queryResult)
 		{
-			removeAllColumns;
+			removeAllColumns(treeView);
 			string[] columnNames = queryResult.ColumnNames;
 			CellRendererText cellRendererText = new CellRendererText();
 
@@ -41,6 +41,23 @@ namespace SerpisAd
 			}
 
 		}
+
+		public static object GetId(TreeView treeView){
+			TreeIter treeIter;
+			if (!treeView.Selection.GetSelected (out treeIter))
+				return null;
+			IList row = (IList)treeView.Model.GetValue (treeIter, 0);
+			return row [0];
+		}
+
+		public static bool IsSelected(TreeView treeView) {
+			TreeIter treeIter;
+			return treeView.Selection.GetSelected (out treeIter);
+			//o bien
+			//return treeView.Selection.CountSelectionRows()!=0;
+		}
+
+
 		public static void Reset (){
 
 		
