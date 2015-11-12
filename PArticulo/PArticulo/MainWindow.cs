@@ -35,7 +35,7 @@ public partial class MainWindow: Gtk.Window
 	}
 
 	private void delete(object id){
-		if (ConfirmDelete(this)) {
+		if (WindowsHelper.ConfirmDelete(this)) {
 			Console.WriteLine ("Dice que eliminar si");
 		} else {
 			Console.WriteLine ("Dice que eliminar no");
@@ -43,21 +43,6 @@ public partial class MainWindow: Gtk.Window
 
 	}
 
-	public static bool ConfirmDelete(Window window){
-		MessageDialog messageDialog = new MessageDialog (
-			window, 
-			DialogFlags.DestroyWithParent, 
-			MessageType.Question,
-			ButtonsType.YesNo,
-			"¿Quieres eliminar el elemento seleccionado?"
-			);
-		messageDialog.Title = window.Title;
-		ResponseType response = (ResponseType)messageDialog.Run ();
-		messageDialog.Destroy();
-		//Devuelve true si pulsa Yes, false si no pulsa Yes
-		return response == ResponseType.Yes;
-
-	}
 
 
 //	void newActionActivated (object sender, EventArgs e)
