@@ -12,29 +12,41 @@ public partial class MainWindow: Gtk.Window
 	{
 		Build ();
 		Title = "Artículo";
-		Console.WriteLine ("MainWindow ctor.");
 		QueryResult queryResult = PersisterHelper.Get ("select * from articulo");
 		TreeViewHelper.Fill (treeView, queryResult);
+
+		
+		deleteAction.Sensitive = false;
+		editAction.Sensitive = false;
 
 		newAction.Activated += delegate {
 			new ArticuloView();
 		};
 
+		editAction.Activated += delegate {
+			object id = TreeViewHelper.GetId(treeView);
+			new ArticuloView(id).Show();
+
+		};
+
 		deleteAction.Activated += delegate {
 			object id = TreeViewHelper.GetId(treeView);
-			Console.WriteLine ("click en deleteAction id={0}", id);
+			//Console.WriteLine ("click en deleteAction id={0}", id);
 			delete(id);
+			fillTreeView();
 
 		};
 
 		treeView.Selection.Changed += delegate {
 			Console.WriteLine("Ha ocurrido treeview.Selection.Changed");
-			deleteAction.Sensitive = TreeViewHelper.IsSelected(treeView);
+			bool isSelected = TreeViewHelper.IsSelected(treeView);
+			deleteAction.Sensitive = isSelected;
+			editAction.Sensitive = isSelected;
 		};
-		//{
-		//newAction.Activated += newActionActivated;
-		deleteAction.Sensitive = false;
+
 	}
+
+
 
 	private void delete(object id){
 		if (WindowsHelper.ConfirmDelete (this)) {
@@ -44,24 +56,6 @@ public partial class MainWindow: Gtk.Window
 			dbCommand.ExecuteNonQuery ();
 		}
 	}
-	/*private void delete(object id){
-		if (WindowsHelper.ConfirmDelete(this)) {
-
-			Console.WriteLine ("Dice que eliminar si");
-		} else {
-			Console.WriteLine ("Dice que eliminar no");
-		}
-
-	}*/
-
-
-
-//	void newActionActivated (object sender, EventArgs e)
-//	{
-//		new ArticuloView ();
-//	}
-	//Metodo para ver si hay seleccionados
-
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{

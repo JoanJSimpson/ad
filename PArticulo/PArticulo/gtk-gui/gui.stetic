@@ -27,6 +27,11 @@
         <property name="Label" translatable="yes" />
         <property name="StockId">gtk-remove</property>
       </action>
+      <action id="editAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-edit</property>
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
@@ -44,6 +49,7 @@
               <node type="Toolitem" action="refreshAction" />
               <node type="Toolitem" action="newAction" />
               <node type="Toolitem" action="deleteAction" />
+              <node type="Toolitem" action="editAction" />
             </node>
           </widget>
           <packing>

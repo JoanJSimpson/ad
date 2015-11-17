@@ -8,31 +8,51 @@ namespace PArticulo
 {
 	public partial class ArticuloView : Gtk.Window
 	{
+		private object id;
+		private object categoria;
 		public ArticuloView () : 
 				base(Gtk.WindowType.Toplevel)
 		{
+
 			this.Build ();
-			//entryNombre.Text = "nuevo";
+			Title = "Artículo Nuevo";
 			QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
-			ComboBoxHelper.Fill (comboBoxCategoria, queryResult);
+			ComboBoxHelper.Fill (comboBoxCategoria, queryResult, categoria);
 
 			saveAction.Activated += delegate {
 				save();
 			};
-//			CellRendererText cellRendererText = new CellRendererText ();
-//			comboBoxCategoria.PackStart (cellRendererText, false);
-//			comboBoxCategoria.SetCellDataFunc (cellRendererText, 
-//				delegate(CellLayout cell_layout, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
-//					IList row = (IList)tree_model.GetValue(iter, 0);
-//					cellRendererText.Text = row[1].ToString();
-//				});
-//			ListStore listStore = new ListStore (typeof(IList));
-//			foreach (IList row in queryResult.Rows)
-//				listStore.AppendValues (row);
-//			comboBoxCategoria.Model = listStore;
+//			
+		}
 
-			//comboBoxCategoria.
-			//spinButtonPrecio.Value = 1.5;
+		//this() llama al constructor por defecto
+		public ArticuloView(object id) : this() {
+			Title = "Editar Artículo";
+			this.id = id;
+			load ();
+		}
+
+		private void load(){
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
+			dbCommand.CommandText = "select * from articulo where id = @id";
+			DbCommandHelper.AddParameter (dbCommand, "id", id);
+			IDataReader dataReader = dbCommand.ExecuteReader ();
+			if (!dataReader.Read ()) {
+				//ToDO throw Exception
+				return;
+			}
+			string nombre = (string)dataReader ["nombre"];
+			categoria = dataReader ["categoria"];
+			if (categoria is DBNull) {
+				categoria = null;
+			}
+			decimal precio = (decimal)dataReader ["precio"];
+			dataReader.Close ();
+			entryNombre.Text = nombre;
+			//ToDO posicionarnos en comboBoxCategoria
+			spinButtonPrecio.Value = Convert.ToDouble (precio);
+
+
 		}
 
 		private void save(){
@@ -41,26 +61,14 @@ namespace PArticulo
 				"values (@nombre, @categoria, @precio)";
 
 			string nombre = entryNombre.Text;
-			object categoria = ComboBoxHelper.GetId(comboBoxCategoria);
+			categoria = ComboBoxHelper.GetId(comboBoxCategoria);
 			decimal precio = Convert.ToDecimal(spinButtonPrecio.Value);
 
 			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
-//			IDbDataParameter dbDataParameterNombre = dbCommand.CreateParameter ();
-//			dbDataParameterNombre.ParameterName = "nombre";
-//			dbDataParameterNombre.Value = nombre;
-//			dbCommand.Parameters.Add (dbDataParameterNombre);
 
 			DbCommandHelper.AddParameter (dbCommand, "categoria", categoria);
-//			IDbDataParameter dbDataParameterCategoria = dbCommand.CreateParameter ();
-//			dbDataParameterCategoria.ParameterName = "categoria";
-//			dbDataParameterCategoria.Value = categoria;
-//			dbCommand.Parameters.Add (dbDataParameterCategoria);
 
 			DbCommandHelper.AddParameter (dbCommand, "precio", precio);
-//			IDbDataParameter dbDataParameterPrecio = dbCommand.CreateParameter ();
-//			dbDataParameterPrecio.ParameterName = "precio";
-//			dbDataParameterPrecio.Value = precio;
-//			dbCommand.Parameters.Add (dbDataParameterPrecio);
 
 			dbCommand.ExecuteNonQuery();
 		}
