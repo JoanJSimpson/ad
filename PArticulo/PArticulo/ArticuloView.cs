@@ -6,30 +6,29 @@ using System.Data;
 
 namespace PArticulo
 {
+	public delegate void SaveDelegate();
 	public partial class ArticuloView : Gtk.Window
 	{
 		private object id = null;
 		private object categoria = null;
 		private string nombre = "";
 		private decimal precio = 0;
+		private SaveDelegate save;
 
 		public ArticuloView () : base(Gtk.WindowType.Toplevel)
 		{
 
 			Title = "Artículo Nuevo";
 			init ();
-
-
-//			
+			save = insert;
 		}
 
-		//this() llama al constructor por defecto
 		public ArticuloView(object id): base(Gtk.WindowType.Toplevel){
-			//this.Build ();
 			Title = "Editar Artículo";
 			this.id = id;
 			load ();
 			init ();
+			save = update;
 		}
 
 		private void load(){
@@ -64,14 +63,41 @@ namespace PArticulo
 
 		}
 
-		private void save(){
+		/*
+		 * dbCommand.CommandText = "UPDATE categoria SET nombre = "+ nombre + ", categoria = "+categoria+", precio = "+precio+
+					" where id = "+id;
+				dbCommand.CommandText = "UPDATE categoria SET nombre = @nombre, categoria = @categoria, precio = @precio where id = @id";
+
+			}*/
+
+		 private void update(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
+			dbCommand.CommandText = "UPDATE articulo SET nombre = @nombre, categoria = @categoria, precio = @precio where id = @id";
+
+			nombre = entryNombre.Text;
+			categoria = ComboBoxHelper.GetId(comboBoxCategoria);
+			precio = Convert.ToDecimal(spinButtonPrecio.Value);
+
+			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
+			DbCommandHelper.AddParameter (dbCommand, "categoria", categoria);
+			DbCommandHelper.AddParameter (dbCommand, "precio", precio);
+			DbCommandHelper.AddParameter (dbCommand, "id", id);
+
+			dbCommand.ExecuteNonQuery();
+			this.Destroy();
+
+		}
+
+		private void insert(){
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
+			
+			nombre = entryNombre.Text;
+			categoria = ComboBoxHelper.GetId(comboBoxCategoria);
+			precio = Convert.ToDecimal(spinButtonPrecio.Value);
+
 			dbCommand.CommandText = "insert into articulo (nombre, categoria, precio) " +
 				"values (@nombre, @categoria, @precio)";
 
-			string nombre = entryNombre.Text;
-			categoria = ComboBoxHelper.GetId(comboBoxCategoria);
-			decimal precio = Convert.ToDecimal(spinButtonPrecio.Value);
 
 			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
 

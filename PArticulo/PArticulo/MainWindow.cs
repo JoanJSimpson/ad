@@ -26,6 +26,7 @@ public partial class MainWindow: Gtk.Window
 		editAction.Activated += delegate {
 			object id = TreeViewHelper.GetId(treeView);
 			new ArticuloView(id).Show();
+			fillTreeView();
 		};
 
 		deleteAction.Activated += delegate {
@@ -36,7 +37,7 @@ public partial class MainWindow: Gtk.Window
 		};
 
 		treeView.Selection.Changed += delegate {
-			Console.WriteLine("Ha ocurrido treeview.Selection.Changed");
+			//Console.WriteLine("Ha ocurrido treeview.Selection.Changed");
 			bool isSelected = TreeViewHelper.IsSelected(treeView);
 			deleteAction.Sensitive = isSelected;
 			editAction.Sensitive = isSelected;
