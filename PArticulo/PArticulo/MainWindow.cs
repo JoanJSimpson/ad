@@ -26,7 +26,6 @@ public partial class MainWindow: Gtk.Window
 		editAction.Activated += delegate {
 			object id = TreeViewHelper.GetId(treeView);
 			new ArticuloView(id).Show();
-
 		};
 
 		deleteAction.Activated += delegate {
@@ -34,7 +33,6 @@ public partial class MainWindow: Gtk.Window
 			//Console.WriteLine ("click en deleteAction id={0}", id);
 			delete(id);
 			fillTreeView();
-
 		};
 
 		treeView.Selection.Changed += delegate {

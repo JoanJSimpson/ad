@@ -8,28 +8,28 @@ namespace PArticulo
 {
 	public partial class ArticuloView : Gtk.Window
 	{
-		private object id;
-		private object categoria;
-		public ArticuloView () : 
-				base(Gtk.WindowType.Toplevel)
+		private object id = null;
+		private object categoria = null;
+		private string nombre = "";
+		private decimal precio = 0;
+
+		public ArticuloView () : base(Gtk.WindowType.Toplevel)
 		{
 
-			this.Build ();
 			Title = "Artículo Nuevo";
-			QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
-			ComboBoxHelper.Fill (comboBoxCategoria, queryResult, categoria);
+			init ();
 
-			saveAction.Activated += delegate {
-				save();
-			};
+
 //			
 		}
 
 		//this() llama al constructor por defecto
-		public ArticuloView(object id) : this() {
+		public ArticuloView(object id): base(Gtk.WindowType.Toplevel){
+			//this.Build ();
 			Title = "Editar Artículo";
 			this.id = id;
 			load ();
+			init ();
 		}
 
 		private void load(){
@@ -41,17 +41,26 @@ namespace PArticulo
 				//ToDO throw Exception
 				return;
 			}
-			string nombre = (string)dataReader ["nombre"];
+			nombre = (string)dataReader ["nombre"];
 			categoria = dataReader ["categoria"];
 			if (categoria is DBNull) {
 				categoria = null;
 			}
-			decimal precio = (decimal)dataReader ["precio"];
+			precio = (decimal)dataReader ["precio"];
 			dataReader.Close ();
-			entryNombre.Text = nombre;
-			//ToDO posicionarnos en comboBoxCategoria
-			spinButtonPrecio.Value = Convert.ToDouble (precio);
 
+		}
+
+		private void init(){
+			
+			this.Build ();
+			entryNombre.Text = nombre;
+			QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
+			ComboBoxHelper.Fill (comboBoxCategoria, queryResult, categoria);
+			spinButtonPrecio.Value = Convert.ToDouble (precio);
+			saveAction.Activated += delegate {
+				save();
+			};
 
 		}
 
@@ -72,8 +81,6 @@ namespace PArticulo
 
 			dbCommand.ExecuteNonQuery();
 		}
-
-
 
 
 	}
