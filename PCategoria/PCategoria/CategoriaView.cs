@@ -6,25 +6,25 @@ using System.Data;
 
 namespace PCategoria
 {
+	public delegate void SaveDelegate();
 	public partial class CategoriaView : Gtk.Window
 	{
-		object id;
+		private SaveDelegate save;
+		private object id = null;
+		private string nombre = "";
 		public CategoriaView () : base(Gtk.WindowType.Toplevel)
 		{
-			this.Build ();
-			Title = "Nueva Categoría";
-	
-			saveAction.Activated += delegate {
-				save();
-				Destroy();
-			};
-
+			string titulo = "Nueva Categoría";
+			init (titulo);
+			save = insert;
 		}
-		//this() llama al constructor por defecto
-		public CategoriaView(object id) : this() {
-			Title = "Editar Categoría";
+
+		public CategoriaView(object id) : base(Gtk.WindowType.Toplevel){
+			string titulo = "Editar Categoría";
 			this.id = id;
 			load ();
+			init (titulo);
+			save = update;
 		}
 
 		private void load(){
@@ -36,22 +36,45 @@ namespace PCategoria
 				//ToDO throw Exception
 				return;
 			}
-			string nombre = (string)dataReader ["nombre"];
+			nombre = (string)dataReader ["nombre"];
 			dataReader.Close ();
-			entryNombre.Text = nombre;
 
 		}
 
-		private void save(){
+		private void init(String titulo){
+			this.Build();
+			Title = titulo;
+			entryNombre.Text = nombre;
+			saveAction.Activated += delegate {
+				save();
+				Destroy();
+			};
+		}
+
+		private void insert(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
 			dbCommand.CommandText = "insert into categoria (nombre) " +
 				"values (@nombre)";
 
-			string nombre = entryNombre.Text;
+			nombre = entryNombre.Text;
 
 			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
 
 			dbCommand.ExecuteNonQuery();
+		}
+
+		private void update(){
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
+			dbCommand.CommandText = "UPDATE categoria SET nombre = @nombre where id = @id";
+
+			nombre = entryNombre.Text;
+
+			DbCommandHelper.AddParameter (dbCommand, "nombre", nombre);
+			DbCommandHelper.AddParameter (dbCommand, "id", id);
+
+			dbCommand.ExecuteNonQuery();
+			this.Destroy();
+
 		}
 
 
