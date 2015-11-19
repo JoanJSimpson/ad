@@ -38,6 +38,7 @@ namespace PArticulo
 			IDataReader dataReader = dbCommand.ExecuteReader ();
 			if (!dataReader.Read ()) {
 				//ToDO throw Exception
+				Console.WriteLine("dataReader no puede leer");
 				return;
 			}
 			nombre = (string)dataReader ["nombre"];
@@ -45,7 +46,11 @@ namespace PArticulo
 			if (categoria is DBNull) {
 				categoria = null;
 			}
-			precio = (decimal)dataReader ["precio"];
+			try {
+				precio = (decimal)dataReader ["precio"];
+			}catch{
+				precio = 0;
+			}
 			dataReader.Close ();
 
 		}
@@ -62,13 +67,6 @@ namespace PArticulo
 			};
 
 		}
-
-		/*
-		 * dbCommand.CommandText = "UPDATE categoria SET nombre = "+ nombre + ", categoria = "+categoria+", precio = "+precio+
-					" where id = "+id;
-				dbCommand.CommandText = "UPDATE categoria SET nombre = @nombre, categoria = @categoria, precio = @precio where id = @id";
-
-			}*/
 
 		 private void update(){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
