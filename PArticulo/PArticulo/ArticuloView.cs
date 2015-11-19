@@ -18,16 +18,16 @@ namespace PArticulo
 		public ArticuloView () : base(Gtk.WindowType.Toplevel)
 		{
 
-			Title = "Artículo Nuevo";
-			init ();
+			string titulo = "Artículo Nuevo";
+			init (titulo);
 			save = insert;
 		}
 
 		public ArticuloView(object id): base(Gtk.WindowType.Toplevel){
-			Title = "Editar Artículo";
+			string titulo = "Editar Artículo";
 			this.id = id;
 			load ();
-			init ();
+			init (titulo);
 			save = update;
 		}
 
@@ -55,9 +55,10 @@ namespace PArticulo
 
 		}
 
-		private void init(){
-			
+		private void init(String titulo){
+
 			this.Build ();
+			Title = titulo;
 			entryNombre.Text = nombre;
 			QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
 			ComboBoxHelper.Fill (comboBoxCategoria, queryResult, categoria);
