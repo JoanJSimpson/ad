@@ -16,6 +16,13 @@ namespace PArticulo
 		private SaveDelegate save;
 		private Articulo articulo;
 
+		//[Field("Nombre")]
+		public Entry Nombre {
+			get {
+				return entryNombre;
+			}
+		}
+
 		public ArticuloView () : base(Gtk.WindowType.Toplevel)
 		{
 
@@ -65,8 +72,9 @@ namespace PArticulo
 		private void init(String titulo){
 
 			this.Build ();
+			Articulo articulo = new Articulo ();
 			Title = titulo;
-			entryNombre = (String) articulo.Nombre;
+			entryNombre.Text = articulo.Nombre;
 			QueryResult queryResult = PersisterHelper.Get ("select * from categoria");
 			ComboBoxHelper.Fill (comboBoxCategoria, queryResult, articulo.Categoria);
 			spinButtonPrecio.Value = Convert.ToDouble (articulo.Precio);

@@ -38,9 +38,9 @@ namespace PArticulo
 
 			dataReader.Close ();
 			return articulo;
-
-
 		}
+
+
 		public static void Insert(Articulo articulo){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
 
