@@ -26,50 +26,50 @@ namespace PArticulo
 //				return;
 //			}
 			articulo.Nombre = (string)dataReader ["nombre"];
-			articulo.Categoria = dataReader ["categoria"];
-			if (articulo.Categoria is DBNull) {
-				articulo.Categoria = null;
-			}
-			try {
-				articulo.Precio = (decimal)dataReader ["precio"];
-			}catch{
-				articulo.Precio = 0;
-			}
-
+			articulo.Categoria = get (dataReader ["categoria"], null);
+			articulo.Precio = (decimal)get (dataReader ["precio"], decimal.Zero);
 			dataReader.Close ();
 			return articulo;
 		}
 
+		private static object get (object value, object defaultValue){
+			return value is DBNull ? defaultValue : value;
+		}
 
-		public static void Insert(Articulo articulo){
+
+		public static int Insert(Articulo articulo){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
 
 
 			dbCommand.CommandText = "insert into articulo (nombre, categoria, precio) " +
 				"values (@nombre, @categoria, @precio)";
 
-
 			DbCommandHelper.AddParameter (dbCommand, "nombre", articulo.Nombre);
-
 			DbCommandHelper.AddParameter (dbCommand, "categoria", articulo.Categoria);
-
 			DbCommandHelper.AddParameter (dbCommand, "precio", articulo.Precio);
+			//dbCommand.ExecuteNonQuery();
 
-			dbCommand.ExecuteNonQuery();
+			return dbCommand.ExecuteNonQuery ();
 		}
 
-		public static void Update (Articulo articulo){
+		public static int Update (Articulo articulo){
 			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand ();
-			dbCommand.CommandText = "UPDATE articulo SET nombre = @nombre, categoria = @categoria, precio = @precio where id = @id";
-
+			dbCommand.CommandText = "UPDATE articulo SET nombre = @nombre, categoria = @categoria," +
+				"precio = @precio where id = @id";
 
 			DbCommandHelper.AddParameter (dbCommand, "nombre", articulo.Nombre);
 			DbCommandHelper.AddParameter (dbCommand, "categoria", articulo.Categoria);
 			DbCommandHelper.AddParameter (dbCommand, "precio", articulo.Precio);
 			DbCommandHelper.AddParameter (dbCommand, "id", articulo.Id);
+			//dbCommand.ExecuteNonQuery();
 
-			dbCommand.ExecuteNonQuery();
+			return dbCommand.ExecuteNonQuery ();
 		}
+
+		public static int Save (Articulo articulo){
+			return articulo.Id == null ? Insert (articulo) : Update (articulo);
+		}
+
 	}
 }
 

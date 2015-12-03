@@ -57,6 +57,7 @@
     <Compile Include="DbCommandHelper.cs" />
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="WindowsHelper.cs" />
+    <Compile Include="Persister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
