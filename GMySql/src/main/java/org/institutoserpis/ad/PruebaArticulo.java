@@ -17,10 +17,6 @@ public class PruebaArticulo {
 
 	public static void main(String[] args) throws SQLException, IOException  {
 		
-		String uno = "1- Visualizar Articulos";
-		String dos = "2- Crear Articulo";
-		String tres = "3- Actualizar Articulo";
-		String cuatro = "4- Borrar Articulo";
 		
 		
 		boolean acabado =false;
@@ -77,12 +73,9 @@ public class PruebaArticulo {
 					break;
 			}
 		}
-		System.out.println("FIN");
+		System.out.println("\nFIN");
 		
 	}
-	
-	
-	
 	
 	
 	
