@@ -1,5 +1,8 @@
 package org.institutoserpis.ad;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Articulo {
 	
 	private long id;
