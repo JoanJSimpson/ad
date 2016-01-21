@@ -13,6 +13,7 @@ import javax.persistence.Persistence;
 
 
 
+
 public class PruebaArticulo {
 
 private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
@@ -90,7 +91,22 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 	
 	private static void nuevo(){
-		
+		EntityManagerFactory entityManagerFactory = 
+				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
+		Articulo articulo = scanArticulo();
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist( articulo );
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
+	
+	private static void editar(){
+		System.out.println("It doesn't developed yet");
+	}
+	
+	private static void eliminar(){
+		System.out.println("It doesn't developed yet");
 	}
 	
 	
@@ -100,9 +116,9 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		while (true){
 			Action action = scanAction();
 			if (action == Action.Salir) break;
-			if (action == Action.Nuevo);
-			if (action == Action.Editar);
-			if (action == Action.Eliminar);
+			if (action == Action.Nuevo) nuevo();
+			if (action == Action.Editar) editar();
+			if (action == Action.Eliminar) eliminar();
 			if (action == Action.Consultar) consultar();
 			System.out.println();
 		}
