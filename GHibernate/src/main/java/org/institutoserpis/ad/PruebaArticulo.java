@@ -61,6 +61,11 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		}
 	}
 	
+	
+	
+	//======================================================
+	// Metodos
+	//======================================================
 	private static Articulo scanArticulo(){
 		Articulo articulo = new Articulo();
 		articulo.setNombre(scanString(    "     Nombre: "));
@@ -106,7 +111,20 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 	
 	private static void eliminar(){
-		System.out.println("It doesn't developed yet");
+//		System.out.println("It doesn't developed yet");
+		Long id = scanLong(" Introduce el id a eliminar: ");
+		EntityManagerFactory emf =
+				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
+				EntityManager em = emf.createEntityManager();
+				try {
+				 
+					Articulo articulo = em.find(Articulo.class, id);
+					em.getTransaction().begin();
+					em.remove(articulo);
+					em.getTransaction().commit();
+				} catch (Exception e) {
+					em.close();
+				}
 	}
 	
 	
