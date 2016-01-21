@@ -1,6 +1,7 @@
 package org.institutoserpis.ad;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
 
 
 
@@ -75,6 +77,7 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 	
 	private static void consultar(){
+		System.out.println("======== Consultar artículo ========");
 		EntityManagerFactory entityManagerFactory = 
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
 		
@@ -96,6 +99,7 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 	
 	private static void nuevo(){
+		System.out.println("======== Nuevo artículo ========");
 		EntityManagerFactory entityManagerFactory = 
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
 		Articulo articulo = scanArticulo();
@@ -107,11 +111,35 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 	
 	private static void editar(){
-		System.out.println("It doesn't developed yet");
+		System.out.println("======== Editar artículo ========");
+		//System.out.println("It doesn't developed yet");
+		Long id = scanLong("Introduzca el id del articulo a editar: ");
+		Articulo articulo =  scanArticulo();
+		
+		
+		/*
+		 * try{
+			if (updatePreparedStatement == null)
+				updatePreparedStatement = connection.prepareStatement(updateSql);
+			updatePreparedStatement.setString(1, articulo.nombre);
+			updatePreparedStatement.setLong(2, articulo.categoria);
+			updatePreparedStatement.setBigDecimal(3,  articulo.precio);
+			updatePreparedStatement.setLong(4,  id);
+			int count = updatePreparedStatement.executeUpdate();
+			if (count == 1)
+				System.out.println("artículo guardado");
+			else
+				System.out.println("Error: No existe artículo con ese id");
+		}
+		catch (SQLException ex){
+			showSQLException(ex);
+		}
+		 */
+		
 	}
 	
 	private static void eliminar(){
-//		System.out.println("It doesn't developed yet");
+		System.out.println("======== Eliminar artículo ========");
 		Long id = scanLong(" Introduce el id a eliminar: ");
 		EntityManagerFactory emf =
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
