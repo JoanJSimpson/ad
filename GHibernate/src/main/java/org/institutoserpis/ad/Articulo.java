@@ -1,18 +1,24 @@
 package org.institutoserpis.ad;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Articulo {
 	
-	private long id;
+	private Long id;
 	private String nombre;
-	private long categoria;
-	private long precio;
+	private Long categoria;
+	private BigDecimal precio;
 	
+	public Articulo(){}
 	
-	
-	public Articulo(long id, String nombre, long categoria, long precio) {
+	public Articulo(Long id, String nombre, Long categoria, BigDecimal precio) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -20,10 +26,13 @@ public class Articulo {
 		this.precio = precio;
 	}
 	
-	public long getId() {
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment" , strategy = "increment")
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNombre() {
@@ -32,16 +41,16 @@ public class Articulo {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public long getCategoria() {
+	public Long getCategoria() {
 		return categoria;
 	}
-	public void setCategoria(long categoria) {
+	public void setCategoria(Long categoria) {
 		this.categoria = categoria;
 	}
-	public long getPrecio() {
+	public BigDecimal getPrecio() {
 		return precio;
 	}
-	public void setPrecio(long precio) {
+	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
 	}
 	
