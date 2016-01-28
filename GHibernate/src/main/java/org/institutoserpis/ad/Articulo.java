@@ -16,6 +16,7 @@ public class Articulo {
 	private Long categoria;
 	private BigDecimal precio;
 	
+	//Constructor por defecto
 	public Articulo(){}
 	
 	public Articulo(Long id, String nombre, Long categoria, BigDecimal precio) {

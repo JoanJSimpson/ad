@@ -4,14 +4,15 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
-
 
 
 
@@ -76,6 +77,13 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		return articulo;
 	}
 	
+	private static Articulo scanArticuloMod(Articulo articulo){
+		articulo.setNombre(scanString(    "     Nombre: "));
+		articulo.setCategoria(scanLong(   "  Categoria: "));
+		articulo.setPrecio(scanBigDecimal("     Precio: "));
+		return articulo;
+	}
+	
 	private static void consultar(){
 		System.out.println("======== Consultar artículo ========");
 		EntityManagerFactory entityManagerFactory = 
@@ -113,29 +121,29 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	private static void editar(){
 		System.out.println("======== Editar artículo ========");
 		//System.out.println("It doesn't developed yet");
+		
 		Long id = scanLong("Introduzca el id del articulo a editar: ");
+		EntityManagerFactory emf =
+				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
+				EntityManager em = emf.createEntityManager();
+				try {
+					Articulo articulo = em.find(Articulo.class, id);
+					em.getTransaction().begin();
+					articulo = scanArticuloMod(articulo);
+					em.merge(articulo);
+					//em.remove(articulo);
+					em.getTransaction().commit();
+					System.out.println("Articulo "+id+" modificado correctamente");
+				} catch (Exception e) {
+					System.out.println("Error al modificar el Articulo con id: "+id+"\n"
+							+ "Comprueba que existe ese id");
+					em.close();
+				}
+		
+		/*Long id = scanLong("Introduzca el id del articulo a editar: ");
 		Articulo articulo =  scanArticulo();
-		
-		
-		/*
-		 * try{
-			if (updatePreparedStatement == null)
-				updatePreparedStatement = connection.prepareStatement(updateSql);
-			updatePreparedStatement.setString(1, articulo.nombre);
-			updatePreparedStatement.setLong(2, articulo.categoria);
-			updatePreparedStatement.setBigDecimal(3,  articulo.precio);
-			updatePreparedStatement.setLong(4,  id);
-			int count = updatePreparedStatement.executeUpdate();
-			if (count == 1)
-				System.out.println("artículo guardado");
-			else
-				System.out.println("Error: No existe artículo con ese id");
-		}
-		catch (SQLException ex){
-			showSQLException(ex);
-		}
-		 */
-		
+		articulo.setId(id);
+		*/
 	}
 	
 	private static void eliminar(){
@@ -145,19 +153,54 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
 				EntityManager em = emf.createEntityManager();
 				try {
-				 
 					Articulo articulo = em.find(Articulo.class, id);
 					em.getTransaction().begin();
 					em.remove(articulo);
 					em.getTransaction().commit();
+					System.out.println("Articulo "+id+" eliminado correctamente");
 				} catch (Exception e) {
+					System.out.println("Error al eliminar el Articulo con id: "+id+"\n"
+							+ "Comprueba que existe ese id");
 					em.close();
 				}
 	}
 	
-	
 	public static void main (String[] args) {
 
+		//Desde aqui Luis
+		Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+		
+		System.out.println("inicio");
+		EntityManagerFactory entityManagerFactory = 
+				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
+		
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		
+		//Este es lo mismo que el metodo nuevo()
+		/*
+		Articulo articuloNuevo = new Articulo();
+		articuloNuevo.setNombre("nuevo " + new Date());
+		entityManager.persist(articuloNuevo);
+		*/
+		
+		
+		//Este es lo mismo que el metodo consultar()
+		List<Articulo> articulos = entityManager.createQuery("from Articulo", Articulo.class).getResultList();
+		for (Articulo articulo : articulos)
+			System.out.printf("%5s %-40s %5s %10s\n",
+				articulo.getId(),
+				articulo.getNombre(),
+				articulo.getCategoria(),
+				articulo.getPrecio()
+				);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		
+		entityManagerFactory.close();
+		
+		
+		//Desde aqui lo mio
 		
 		while (true){
 			Action action = scanAction();
