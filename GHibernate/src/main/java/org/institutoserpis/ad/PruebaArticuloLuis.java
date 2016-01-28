@@ -17,7 +17,7 @@ import javax.persistence.Persistence;
 
 
 
-public class PruebaArticulo {
+public class PruebaArticuloLuis {
 
 private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	
@@ -64,6 +64,84 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		}
 	}
 	
+	
+	
+	//======================================================
+	// Metodos Luis
+	//======================================================
+	private static void show(Articulo articulo){
+		System.out.printf("%5s %-40s %5s %10s\n",
+				articulo.getId(),
+				articulo.getNombre(),
+				articulo.getCategoria(),
+				articulo.getPrecio()
+				);
+	}
+	
+	private static void query(){
+
+		System.out.println("Query: ");
+			
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+			entityManager.getTransaction().begin();
+			List<Articulo> articulos = entityManager.createQuery("from Articulo", Articulo.class).getResultList();
+			for (Articulo articulo : articulos)
+				show(articulo);
+			entityManager.getTransaction().commit();
+			entityManager.close();
+		}
+	
+	private static Long persist(){	
+		System.out.println("Persist: ");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		Articulo articulo = new Articulo();
+		articulo.setNombre("nuevo "+ new Date());
+		entityManager.persist(articulo);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		show(articulo);
+		return articulo.getId();
+	}
+	
+	private static void find(Long id){
+		System.out.println("Find: "+id);
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		Articulo articulo = entityManager.find(Articulo.class, id);
+		
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		show(articulo);
+	}
+	
+	private static void remove(Long id){
+		System.out.println("Remove: "+id);
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		Articulo articulo = entityManager.find(Articulo.class, id);
+		entityManager.remove(articulo);
+		
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		show(articulo);
+	}
+	
+	private static void update(Long id){
+		System.out.println("Update: "+id);
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		Articulo articulo = entityManager.find(Articulo.class, id);
+		articulo.setNombre("Modificado "+new Date());
+		
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		show(articulo);
+	}
+	
+	//======================================================
+	// Metodos Joan
+	//======================================================
 	private static Articulo scanArticulo(){
 		Articulo articulo = new Articulo();
 		articulo.setNombre(scanString(    "     Nombre: "));
@@ -78,13 +156,6 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		articulo.setPrecio(scanBigDecimal("     Precio: "));
 		return articulo;
 	}
-	
-	
-	
-	//======================================================
-	// Metodos
-	//======================================================
-	
 	
 	private static void consultar(){
 		System.out.println("======== Consultar artículo ========");
@@ -122,6 +193,7 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	
 	private static void editar(){
 		System.out.println("======== Editar artículo ========");
+		//System.out.println("It doesn't developed yet");
 		
 		Long id = scanLong("Introduzca el id del articulo a editar: ");
 		EntityManagerFactory emf =
@@ -131,7 +203,7 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 					Articulo articulo = em.find(Articulo.class, id);
 					em.getTransaction().begin();
 					articulo = scanArticuloMod(articulo);
-					//em.merge(articulo);
+					em.merge(articulo);
 					//em.remove(articulo);
 					em.getTransaction().commit();
 					System.out.println("Articulo "+id+" modificado correctamente");
@@ -141,6 +213,10 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 					em.close();
 				}
 		
+		/*Long id = scanLong("Introduzca el id del articulo a editar: ");
+		Articulo articulo =  scanArticulo();
+		articulo.setId(id);
+		*/
 	}
 	
 	private static void eliminar(){
@@ -162,43 +238,26 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 				}
 	}
 	
+	private static EntityManagerFactory entityManagerFactory;
+	
 	public static void main (String[] args) {
 
 		//Desde aqui Luis
 		Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
 		
 		System.out.println("inicio");
-		EntityManagerFactory entityManagerFactory = 
+		entityManagerFactory = 
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
 		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		
-		//Este es lo mismo que el metodo nuevo()
-		/*
-		Articulo articuloNuevo = new Articulo();
-		articuloNuevo.setNombre("nuevo " + new Date());
-		entityManager.persist(articuloNuevo);
-		*/
-		
-		
-		//Este es lo mismo que el metodo consultar()
-		List<Articulo> articulos = entityManager.createQuery("from Articulo", Articulo.class).getResultList();
-		for (Articulo articulo : articulos)
-			System.out.printf("%5s %-40s %5s %10s\n",
-				articulo.getId(),
-				articulo.getNombre(),
-				articulo.getCategoria(),
-				articulo.getPrecio()
-				);
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		
+		Long articuloId = persist();
+		find(articuloId);
+		update(articuloId);
+		remove(articuloId);
+		query();
 		entityManagerFactory.close();
 		
-		
 		//Desde aqui lo mio
-		
+		/*
 		while (true){
 			Action action = scanAction();
 			if (action == Action.Salir) break;
@@ -207,7 +266,10 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 			if (action == Action.Eliminar) eliminar();
 			if (action == Action.Consultar) consultar();
 			System.out.println();
-		}
+		}*/
+		
+	
 	}
+	
 
 }
