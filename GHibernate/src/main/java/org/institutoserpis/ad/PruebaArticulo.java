@@ -23,6 +23,10 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	
 	private static Scanner scanner = new Scanner(System.in);
 	
+	//======================================================
+	// Metodos Scanner
+	//======================================================
+	
 	private static Action scanAction(){
 		while (true){
 			System.out.print("0-Salir 1-Nuevo 2-Editar 3-Eliminar 4-Consultar: ");
@@ -78,8 +82,6 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		articulo.setPrecio(scanBigDecimal("     Precio: "));
 		return articulo;
 	}
-	
-	
 	
 	//======================================================
 	// Metodos
@@ -167,36 +169,8 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		//Desde aqui Luis
 		Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
 		
-		System.out.println("inicio");
-		EntityManagerFactory entityManagerFactory = 
-				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
-		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		
-		//Este es lo mismo que el metodo nuevo()
-		/*
-		Articulo articuloNuevo = new Articulo();
-		articuloNuevo.setNombre("nuevo " + new Date());
-		entityManager.persist(articuloNuevo);
-		*/
-		
-		
-		//Este es lo mismo que el metodo consultar()
-		List<Articulo> articulos = entityManager.createQuery("from Articulo", Articulo.class).getResultList();
-		for (Articulo articulo : articulos)
-			System.out.printf("%5s %-40s %5s %10s\n",
-				articulo.getId(),
-				articulo.getNombre(),
-				articulo.getCategoria(),
-				articulo.getPrecio()
-				);
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		
-		entityManagerFactory.close();
-		
-		
+	
+		consultar();
 		//Desde aqui lo mio
 		
 		while (true){
