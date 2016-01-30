@@ -193,7 +193,6 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	
 	private static void editar(){
 		System.out.println("======== Editar artículo ========");
-		//System.out.println("It doesn't developed yet");
 		
 		Long id = scanLong("Introduzca el id del articulo a editar: ");
 		EntityManagerFactory emf =
