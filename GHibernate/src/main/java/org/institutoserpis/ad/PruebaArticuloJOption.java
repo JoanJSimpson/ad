@@ -1,6 +1,8 @@
 package org.institutoserpis.ad;
 
 import java.math.BigDecimal;
+
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -32,9 +34,15 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		while (true){
 			String action = JOptionPane.showInputDialog("0-Salir\n1-Nuevo\n2-Editar\n3-Eliminar\n4-Consultar");
 			//String action = scanner.nextLine().trim();
+			/*if(action.equals("") && JOptionPane.YES_OPTION){
+				
+			}*/
 			if (action.matches("[01234]"))
 				return Action.values()[Integer.parseInt(action)];
-			JOptionPane.showMessageDialog(null, "Opción Invalida", "Error", JOptionPane.WARNING_MESSAGE);
+			else if(action.equals(""))
+				JOptionPane.showMessageDialog(null, "Introduzca un número", "Error", JOptionPane.WARNING_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(null, "Opción Invalida", "Error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -76,28 +84,82 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		}
 	}
 	
+	private static Categoria scanCategoria(String label){
+		Categoria categoria = new Categoria();
+		//categoria.setId(scanLong(    "ID de Categoría: "));
+		categoria.setId(scanIdCategoria(  "Id de categoría: ", consultarCategorias()));
+		//categoria.setNombre(scanIdCategoria(   "Nombre de Categoría: ", consultarCategorias()));
+		
+		return categoria;
+	}
+	
+	//Cargar un spinner con las categorias que existen
+	
+	private static Long scanIdCategoria(String label, List<Categoria> cat){
+		String nombres[] = new String[cat.size()];
+		Long id[] = new Long[cat.size()];
+		for (int i=0;i<cat.size();i++){
+			nombres[i]=cat.get(i).getNombre();
+			id[i]=cat.get(i).getId();
+		}
+		JFrame frame = new JFrame("Dialogo");
+		Long idSel=null;
+		String nomSel = (String) JOptionPane.showInputDialog(frame, "Selecciona una categoria", 
+				"Categoria",JOptionPane.QUESTION_MESSAGE,null,nombres, nombres[0]);
+		for (int i=0; i<cat.size();i++){
+			if (nomSel.equals(nombres[i])){
+				idSel=id[i];
+			}
+		}
+		return idSel;
+	}
+	
 	private static Articulo scanArticulo(){
 		Articulo articulo = new Articulo();
 		articulo.setNombre(scanString(    " Nombre: "));
-		articulo.setCategoria(scanLong(   " Categoria: "));
+		articulo.setCategoria(scanCategoria(" Categoria: "));
 		articulo.setPrecio(scanBigDecimal(" Precio: "));
 		return articulo;
 	}
 	
 	private static Articulo scanArticuloMod(Articulo articulo){
+		
 		articulo.setNombre(scanString(    " Nombre: "));
-		articulo.setCategoria(scanLong(   " Categoria: "));
+		Categoria cat = new Categoria();
+		//Long id = scanLong(  "ID de Categoría: ");
+		//cat.setId(id);
+		articulo.setCategoria(scanCategoria(" Categoria: "));
+		//articulo.setCategoria(cat);
 		articulo.setPrecio(scanBigDecimal(" Precio: "));
 		return articulo;
 	}
 	
+
 	//======================================================
 	// Metodos
 	//======================================================
 	
+	private static List<Categoria> consultarCategorias(){
+		EntityManagerFactory entityManagerFactory = 
+				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
+		
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		List<Categoria> categorias = entityManager.createQuery("from Categoria", Categoria.class).getResultList();
+		Categoria cat[] = new Categoria[categorias.size()];
+		//for (Categoria categoria : categorias){
+		for (int i=0; i< categorias.size();i++){
+			cat[i] = categorias.get(i);
+		}
+		entityManager.close();
+		
+		entityManagerFactory.close();
+		return categorias;
+		
+	}
 	
 	private static void consultar(){
-		String datos="<html><table border=1><tr><td>ID</td><td>Nombre</td><td>Categoria</td><td>Precio</td></tr>";
+		String datos="<html><table border=1><tr><td>ID</td><td>Nombre</td><td>Categoria ID</td><td>Categoria Nombre</td><td>Precio</td></tr>";
 		//JOptionPane.showConfirmDialog(null, datos);
 		System.out.println("======== Consultar artículo ========");
 		EntityManagerFactory entityManagerFactory = 
@@ -106,18 +168,20 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		List<Articulo> articulos = entityManager.createQuery("from Articulo", Articulo.class).getResultList();
-		for (Articulo articulo : articulos)
+		for (Articulo articulo : articulos){
+			Categoria cat = articulo.getCategoria();
 			datos+="<tr><td>"+articulo.getId()+"</td>"+
-					"<td>"+articulo.getNombre()+"</td>"+
-					"<td>"+articulo.getCategoria()+"</td>"+
-					"<td>"+articulo.getPrecio()+"</td></tr>";
-			/*
-			System.out.printf("%5s %-30s %5s %10s\n", 
-					articulo.getId(), 
-					articulo.getNombre(), 
-					articulo.getCategoria(), 
-					articulo.getPrecio()
-			);*/
+					"<td>"+articulo.getNombre()+"</td>";
+			if (articulo.getCategoria() == null){
+				datos+="<td>"+null+"</td>"+
+						"<td>"+null+"</td>";
+			}else{
+				datos+="<td>"+articulo.getCategoria().getId()+"</td>"+
+						"<td>"+articulo.getCategoria().getNombre()+"</td>";
+			}
+			datos+="<td>"+articulo.getPrecio()+"</td></tr>";
+		}
+			
 		JOptionPane.showConfirmDialog(null, datos, "Consultar Artículo", JOptionPane.PLAIN_MESSAGE);
 		entityManager.getTransaction().commit();
 		entityManager.close();
@@ -140,29 +204,37 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	
 	private static void editar(){
 		System.out.println("======== Editar artículo ========");
-		
-		Long id = scanLong("Introduzca el id del articulo a editar: ");
-		EntityManagerFactory emf =
+		String datos="<html><table border=1><tr><td>ID</td><td>Nombre</td><td>Categoria</td><td>Precio</td></tr>";
+		//System.out.println("======== Consultar artículo ========");
+		EntityManagerFactory entityManagerFactory = 
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
-				EntityManager em = emf.createEntityManager();
+		
+		EntityManager em = entityManagerFactory.createEntityManager();
+		List<Articulo> articulos = em.createQuery("from Articulo", Articulo.class).getResultList();
+		for (Articulo articulo : articulos){
+			datos+="<tr><td>"+articulo.getId()+"</td>"+
+					"<td>"+articulo.getNombre()+"</td>";
+			if (articulo.getCategoria() == null){
+				datos+="<td>"+null+"</td>";
+			}else{
+				datos+="<td>"+articulo.getCategoria().getNombre()+"</td>";
+			}
+			datos+="<td>"+articulo.getPrecio()+"</td></tr>";
+		}
+		Long id = Long.parseLong(JOptionPane.showInputDialog(null, datos +"\nIntroduce el id a editar", "Editar Artículo", JOptionPane.INFORMATION_MESSAGE));
+		
+		//Long id = scanLong("Introduzca el id del articulo a editar: ");
 				try {
 					Articulo articulo = em.find(Articulo.class, id);
 					em.getTransaction().begin();
 					articulo = scanArticuloMod(articulo);
-					//em.merge(articulo);
-					//em.remove(articulo);
 					em.getTransaction().commit();
-					//System.out.println("Articulo "+id+" modificado correctamente");
-					String datos = "Articulo "+id+" modificado correctamente";
-					JOptionPane.showConfirmDialog(null, datos, "Editar Articulo", JOptionPane.PLAIN_MESSAGE);
+					String datos2 = "Articulo "+id+" modificado correctamente";
+					JOptionPane.showConfirmDialog(null, datos2, "Editar Articulo", JOptionPane.PLAIN_MESSAGE);
 					
 				} catch (Exception e) {
-					//System.out.println("Error al modificar el Articulo con id: "+id+"\n"
-					//		+ "Comprueba que existe ese id");
-					String datos = "Error al modificar el Articulo con id "+id;
-					JOptionPane.showConfirmDialog(null, datos, "Error", JOptionPane.WARNING_MESSAGE);
-					
-					
+					String datos2 = "Error al modificar el Articulo con id "+id;
+					JOptionPane.showConfirmDialog(null, datos2, "Error", JOptionPane.WARNING_MESSAGE);
 					em.close();
 				}
 		
@@ -172,13 +244,6 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	//			METODO ELIMINAR
 	//===================================================================================
 	
-	/**
-	 * int ax = JOptionPane.showConfirmDialog(null, "Estas en java?");
-        if(ax == JOptionPane.YES_OPTION)
-            JOptionPane.showMessageDialog(null, "Has seleccionado SI.");
-        else if(ax == JOptionPane.NO_OPTION)
-            JOptionPane.showMessageDialog(null, "Has seleccionado NO.");
-	 */
 	
 	
 	private static void eliminar(){
@@ -190,34 +255,38 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 				Persistence.createEntityManagerFactory("org.institutoserpis.ad");
 		
 		EntityManager em = entityManagerFactory.createEntityManager();
-		em.getTransaction().begin();
 		List<Articulo> articulos = em.createQuery("from Articulo", Articulo.class).getResultList();
-		for (Articulo articulo : articulos)
+		for (Articulo articulo : articulos){
 			datos+="<tr><td>"+articulo.getId()+"</td>"+
-					"<td>"+articulo.getNombre()+"</td>"+
-					"<td>"+articulo.getCategoria()+"</td>"+
-					"<td>"+articulo.getPrecio()+"</td></tr>";
-		
-		long id = Long.parseLong(JOptionPane.showInputDialog(null, datos +"\nIntroduce el id a eliminar", "Eliminar Artículo", JOptionPane.INFORMATION_MESSAGE));
-		int ax = JOptionPane.showConfirmDialog(null, "Estas Seguro?");
-        if(ax == JOptionPane.YES_OPTION)
-            JOptionPane.showMessageDialog(null, "Has seleccionado SI.");
-        else if(ax == JOptionPane.NO_OPTION)
-            JOptionPane.showMessageDialog(null, "Has seleccionado NO.");
-		try {
-			Articulo articulo = em.find(Articulo.class, id);
-			em.getTransaction().begin();
-			em.remove(articulo);
-			em.getTransaction().commit();
-			String datos2 = "Articulo "+id+" eliminado correctamente";
-			JOptionPane.showConfirmDialog(null, datos2, "Eliminar Articulo", JOptionPane.PLAIN_MESSAGE);
-			
-		} catch (Exception e) {
-			String datos2 = "Error al eliminar el Articulo con id "+id;
-			JOptionPane.showConfirmDialog(null, datos2, "Error", JOptionPane.WARNING_MESSAGE);
-			
-			em.close();
+					"<td>"+articulo.getNombre()+"</td>";
+			if (articulo.getCategoria() == null){
+				datos+="<td>"+null+"</td>";
+			}else{
+				datos+="<td>"+articulo.getCategoria().getNombre()+"</td>";
+			}
+			datos+="<td>"+articulo.getPrecio()+"</td></tr>";
 		}
+		
+		Long id = Long.parseLong(JOptionPane.showInputDialog(null, datos +"\nIntroduce el id a eliminar", "Eliminar Artículo", JOptionPane.INFORMATION_MESSAGE));
+		int ax = JOptionPane.showConfirmDialog(null, "Estas Seguro?");
+        if(ax == JOptionPane.YES_OPTION){
+        	try {
+    			Articulo articulo = em.find(Articulo.class, id);
+    			em.getTransaction().begin();
+    			em.remove(articulo);
+    			em.getTransaction().commit();
+    			String datos2 = "Articulo "+id+" eliminado correctamente";
+    			JOptionPane.showConfirmDialog(null, datos2, "Eliminar Articulo", JOptionPane.PLAIN_MESSAGE);
+    			
+    			
+    		} catch (Exception e) {
+    			String datos2 = "Error al eliminar el Articulo con id "+id;
+    			JOptionPane.showConfirmDialog(null, datos2, "Error", JOptionPane.WARNING_MESSAGE);
+    			e.printStackTrace();
+    			em.close();
+    		}
+        }
+		
 	}
 		
 	
