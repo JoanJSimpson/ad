@@ -168,6 +168,19 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		
 	}
 	
+	//===================================================================================
+	//			METODO ELIMINAR
+	//===================================================================================
+	
+	/**
+	 * int ax = JOptionPane.showConfirmDialog(null, "Estas en java?");
+        if(ax == JOptionPane.YES_OPTION)
+            JOptionPane.showMessageDialog(null, "Has seleccionado SI.");
+        else if(ax == JOptionPane.NO_OPTION)
+            JOptionPane.showMessageDialog(null, "Has seleccionado NO.");
+	 */
+	
+	
 	private static void eliminar(){
 		System.out.println("======== Eliminar artículo ========");
 		String datos="<html><table border=1><tr><td>ID</td><td>Nombre</td><td>Categoria</td><td>Precio</td></tr>";
@@ -186,6 +199,11 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 					"<td>"+articulo.getPrecio()+"</td></tr>";
 		
 		long id = Long.parseLong(JOptionPane.showInputDialog(null, datos +"\nIntroduce el id a eliminar", "Eliminar Artículo", JOptionPane.INFORMATION_MESSAGE));
+		int ax = JOptionPane.showConfirmDialog(null, "Estas Seguro?");
+        if(ax == JOptionPane.YES_OPTION)
+            JOptionPane.showMessageDialog(null, "Has seleccionado SI.");
+        else if(ax == JOptionPane.NO_OPTION)
+            JOptionPane.showMessageDialog(null, "Has seleccionado NO.");
 		try {
 			Articulo articulo = em.find(Articulo.class, id);
 			em.getTransaction().begin();
@@ -203,6 +221,10 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	}
 		
 	
+	//===================================================================================
+	//			MAIN
+	//===================================================================================
+		
 	public static void main (String[] args) {
 
 		//Desde aqui Luis
