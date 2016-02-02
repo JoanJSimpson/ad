@@ -37,6 +37,14 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		}
 	}
 	
+	private static Categoria scanCategoria(String label){
+		Categoria categoria = new Categoria();
+		categoria.setId(scanLong(    "ID de Categoría: "));
+		//categoria.setNombre(scanIdCategoria(   "Nombre de Categoría: ", consultarCategorias()));
+		
+		return categoria;
+	}
+	
 	private static String scanString(String label){
 		System.out.print(label);
 		return scanner.nextLine().trim();
@@ -68,17 +76,19 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 		}
 	}
 	
+	
+	
 	private static Articulo scanArticulo(){
 		Articulo articulo = new Articulo();
 		articulo.setNombre(scanString(    "     Nombre: "));
-		articulo.setCategoria(scanLong(   "  Categoria: "));
+		articulo.setCategoria(scanCategoria(   "  Categoria: "));
 		articulo.setPrecio(scanBigDecimal("     Precio: "));
 		return articulo;
 	}
 	
 	private static Articulo scanArticuloMod(Articulo articulo){
 		articulo.setNombre(scanString(    "     Nombre: "));
-		articulo.setCategoria(scanLong(   "  Categoria: "));
+		articulo.setCategoria(scanCategoria(   "  Categoria: "));
 		articulo.setPrecio(scanBigDecimal("     Precio: "));
 		return articulo;
 	}
@@ -86,7 +96,11 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 	//======================================================
 	// Metodos
 	//======================================================
-	
+	private static String format(Categoria categoria) {
+		if (categoria == null)
+			return null;
+		return String.format("%4s %-20s", categoria.getId(), categoria.getNombre());
+	}
 	
 	private static void consultar(){
 		System.out.println("======== Consultar artículo ========");
@@ -100,7 +114,7 @@ private enum Action {Salir, Nuevo, Editar, Eliminar, Consultar};
 			System.out.printf("%5s %-30s %5s %10s\n", 
 					articulo.getId(), 
 					articulo.getNombre(), 
-					articulo.getCategoria(), 
+					format(articulo.getCategoria()),
 					articulo.getPrecio()
 			);
 		entityManager.getTransaction().commit();
