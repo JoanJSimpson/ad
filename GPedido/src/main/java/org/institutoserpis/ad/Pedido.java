@@ -5,6 +5,8 @@ import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,7 +25,8 @@ public class Pedido {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+	@ManyToOne
+	@JoinColumn(name="cliente")
 	public Cliente getCliente() {
 		return cliente;
 	}
